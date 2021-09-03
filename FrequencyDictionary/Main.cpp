@@ -46,7 +46,7 @@ int main()
 
 			for (size_t i = 0; i < strlen(symbols); ++i)
 			{
-				str.erase(remove(str.begin(), str.end(), symbols[i]));
+				str.erase(remove(str.begin(), str.end(), symbols[i]), str.end());
 			}
 
 			mset.emplace(str);
