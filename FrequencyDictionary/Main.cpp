@@ -107,7 +107,7 @@ int main()
 	}
 	
 	cout << endl << endl;
-	cout << "Наиболее часто встречающееся слово: " << p.first << " " << p.second << endl;		
+	cout << "Наиболее часто встречающееся слово: " << p.first << " - " << p.second << " раз" << endl;		
 
 	try
 	{		
