@@ -84,15 +84,7 @@ int main()
 				}
 			}
 
-			if (!fs.is_open())
-			{
-				cout << "Ошибка ";
-			}
-
-			else
-			{
 				fs << item.first << " " << item.second << "\n";
-			}
 
 			cout << left << " |" << setw(20) << item.first << "| " << setw(5) << item.second << "  | " << endl;
 			cout << " +--------------------+--------+\n";
