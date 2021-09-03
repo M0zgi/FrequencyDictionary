@@ -16,8 +16,6 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 
-	//setlocale(LC_ALL, "ru");
-
 	string fName = "text.txt"; // имя файла для считывания исходного текста
 	string fName2 = "formated_dictionary.txt"; // имя файла для сохранения форматированного текста
 	string fName3 = "frequency_dictionary.txt"; // имя файла для сохранения форматированного текста + кол-ва его повторения
@@ -27,89 +25,106 @@ int main()
 	pair <string, int> p;
 
 	fstream fs;
+	fs.exceptions(fstream::badbit | fstream::failbit);
 
 	multiset <string> mset;
 	map<string, int> mp;
 	
 	int count = 0;
 
-	const char symbols[] = { '\"','.', ';', ':', '!', ',', ')', '(',  '&', '?', '"', '«', '»', '\0'};
+	const char symbols[] = { '\"','.', ';', ':', '!', ',', ')', '(',  '&', '?', '"', '«', '»', '\0'};	
 
-	fs.open(fName, fstream::in | fstream::out | fstream::app);
-
-	if (!fs.is_open())
+	try
 	{
-		cout << "Ошибка ";
-	}
+		fs.open(fName, fstream::in | fstream::out | fstream::app);
 
-	else
-	{
 		while (!fs.eof())
-		{				
+		{
 			str = "";
-			
+
 			fs >> str;
 
 			for (size_t i = 0; i < strlen(symbols); ++i)
 			{
 				str.erase(remove(str.begin(), str.end(), symbols[i]));
 			}
-			
-			mset.emplace(str);			
-			
+
+			mset.emplace(str);
+
 			++mp[str];
-		}		
+		}
+
+		fs.close();
+	}
+	catch (const fstream::failure & ex)
+	{
+		cout << ex.code();
 	}
 	
-	fs.close();
-
-	fs.open(fName3, fstream::in | fstream::out);
-	
-	cout << " +--------------------+--------+\n";
-
-	cout << " |        Слово       | Кол-во |\n";
-
-	cout << " +--------------------+--------+\n";
-
-	for (auto& item : mp)
+	try
 	{
-		auto it = item.first.size();
+		fs.open(fName3, fstream::in | fstream::out);
 
-		if (it > 2)
-		{
-			if (p.second < item.second)
-			{
-				p.first = item.first;
-				p.second = item.second;
-			}		
-		}
-
-		if (!fs.is_open())
-		{
-			cout << "Ошибка ";
-		}
-
-		else
-		{			
-			fs << item.first << " " << item.second << "\n";
-		}
-
-		cout << left << " |" << setw(20) << item.first << "| " << setw(5) << item.second << "  | " << endl;
 		cout << " +--------------------+--------+\n";
+
+		cout << " |        Слово       | Кол-во |\n";
+
+		cout << " +--------------------+--------+\n";
+
+		for (auto& item : mp)
+		{
+			auto it = item.first.size();
+
+			if (it > 2)
+			{
+				if (p.second < item.second)
+				{
+					p.first = item.first;
+					p.second = item.second;
+				}
+			}
+
+			if (!fs.is_open())
+			{
+				cout << "Ошибка ";
+			}
+
+			else
+			{
+				fs << item.first << " " << item.second << "\n";
+			}
+
+			cout << left << " |" << setw(20) << item.first << "| " << setw(5) << item.second << "  | " << endl;
+			cout << " +--------------------+--------+\n";
+		}
+
+		fs.close();
 	}
 
-	fs.close();
-	cout << endl << endl;
-	cout << "Наиболее часто встречающееся слово: " << p.first << " " << p.second << endl;	
-
-	fs.open(fName2, fstream::in | fstream::out);
-
-	for (auto& item : mset)
+	catch (const fstream::failure& ex)
 	{
-		fs << item << "\n";
+		cout << ex.code();
+	}
+	
+	cout << endl << endl;
+	cout << "Наиболее часто встречающееся слово: " << p.first << " " << p.second << endl;		
+
+	try
+	{		
+		fs.open(fName2, fstream::in | fstream::out);
+
+		for (auto& item : mset)
+		{
+			fs << item << "\n";
+		}
+
+		fs.close();
 	}
 
-	fs.close();
+	catch (const fstream::failure& ex)
+	{
+		cout << ex.code();
+	}	
 
 	cout << endl;
 	system("pause");
